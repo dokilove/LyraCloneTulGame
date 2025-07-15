@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TulGame.h"
+#include "TulLogChannels.h"
 #include "Modules/ModuleManager.h"
 
 class FTulGameModule : public FDefaultGameModuleImpl
@@ -13,7 +14,7 @@ public:
 void FTulGameModule::StartupModule()
 {
 	FDefaultGameModuleImpl::StartupModule();
-	UE_LOG(LogTemp, Warning, TEXT("StartupModule!"));
+	UE_LOG(LogTul, Warning, TEXT("StartupModule!"));
 }
 
 void FTulGameModule::ShutdownModule()
