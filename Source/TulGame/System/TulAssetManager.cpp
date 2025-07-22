@@ -18,7 +18,7 @@ UTulAssetManager& UTulAssetManager::Get()
 		return *Singleton;
 	}
 
-	UE_LOG(LogTul, Fatal, TEXT("Invailed AssetManagerClassname in DefaultEngine.ini(project settings); it must be TulAssetManager"));
+	UE_LOG(LogTul, Fatal, TEXT("Invalid AssetManagerClassname in DefaultEngine.ini(project settings); it must be TulAssetManager"));
 
 	// 위의 UE_LOG의 Fatal로 인해, Crash 나기 때문에 도달하지 않지만 컴파일을 위해 더미로 리턴 
 	return *NewObject<UTulAssetManager>();
