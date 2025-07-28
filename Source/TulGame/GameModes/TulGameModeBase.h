@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "TulGameModeBase.generated.h"
 
+class UTulExperienceDefinition;
+
 /**
  * 
  */
@@ -18,9 +20,18 @@ public:
 	ATulGameModeBase();
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void InitGameState() final;
+
+	/** HandleStartingNewPlayer */
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) final;
+
+	/** SpawnDefaultPawnAtTransform */
+	virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) final;
 
 	/**
 	* member methods
 	*/
-	void HandleMatchAssignmentIfNotExpetingOne();
+	void HandleMatchAssignmentIfNotExpectingOne();
+	bool IsExperienceLoaded() const;
+	void OnExperienceLoaded(const UTulExperienceDefinition* CurrentExperience);
 };
