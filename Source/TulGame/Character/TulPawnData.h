@@ -17,4 +17,7 @@ class TULGAME_API UTulPawnData : public UPrimaryDataAsset
 public:
 	UTulPawnData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	/** Pawn¿« Class*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tul|Pawn")
+	TSubclassOf<APawn> PawnClass;
 };
