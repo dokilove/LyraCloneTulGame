@@ -18,6 +18,7 @@ public class TulGame : ModuleRules
 			"GameplayTags",
 			// Game Features
 			"ModularGameplay",
+			"GameFeatures",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
