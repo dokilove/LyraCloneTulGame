@@ -130,3 +130,10 @@ void UTulExperienceManagerComponent::OnExperienceFullLoadCompleted()
 	OnExperienceLoaded.Broadcast(CurrentExperience);
 	OnExperienceLoaded.Clear();
 }
+
+const UTulExperienceDefinition* UTulExperienceManagerComponent::GetCurrentExperienceChecked() const
+{
+	check(LoadState == ETulExperienceLoadState::Loaded);
+	check(CurrentExperience != nullptr);
+	return CurrentExperience;
+}

@@ -25,7 +25,10 @@ public:
 	/**
 	* member methods
 	*/
+	template <class T>
+	const T* GetPawnData() const { return Cast<T>(PawnData); }
 	void OnExperienceLoaded(const UTulExperienceDefinition* CurrentExperience);
+	void SetPawnData(const UTulPawnData* InPawnData);
 
 	UPROPERTY()
 	TObjectPtr<const UTulPawnData> PawnData;

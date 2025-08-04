@@ -42,6 +42,7 @@ public:
 	void StartExperienceLoad();
 	void OnExperienceLoadComplete();
 	void OnExperienceFullLoadCompleted();
+	const UTulExperienceDefinition* GetCurrentExperienceChecked() const;
 	
 public:
 	UPROPERTY()
