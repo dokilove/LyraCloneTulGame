@@ -2,6 +2,8 @@
 
 
 #include "TulAssetManager.h"
+
+#include "TulGame/TulGameplayTags.h"
 #include "TulGame/TulLogChannels.h"
 
 UTulAssetManager::UTulAssetManager()
@@ -28,6 +30,8 @@ PRAGMA_DISABLE_OPTIMIZATION
 void UTulAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
+
+	FTulGameplayTags::InitializeNativeTags();
 }
 PRAGMA_ENABLE_OPTIMIZATION
 
