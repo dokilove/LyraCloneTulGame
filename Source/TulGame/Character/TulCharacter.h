@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "TulCharacter.generated.h"
 
+class UTulPawnExtensionComponent;
+
 UCLASS()
 class TULGAME_API ATulCharacter : public ACharacter
 {
@@ -26,4 +28,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tul|Character")
+	TObjectPtr<UTulPawnExtensionComponent> PawnExtComponent;
 };
