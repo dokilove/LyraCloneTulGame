@@ -10,6 +10,7 @@
 #include "TulGame/Player/TulPlayerController.h"
 #include "TulGame/Player/TulPlayerState.h"
 #include "TulGame/Character/TulPawnData.h"
+#include "TulGame/Character/TulPawnExtensionComponent.h"
 
 ATulGameModeBase::ATulGameModeBase()
 {
@@ -66,8 +67,29 @@ PRAGMA_ENABLE_OPTIMIZATION
 
 APawn* ATulGameModeBase::SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform)
 {
-	UE_LOG(LogTul, Log, TEXT("SpawnDefaultPawnAtTransform_Implementation is called!"));
-	return Super::SpawnDefaultPawnAtTransform_Implementation(NewPlayer, SpawnTransform);
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Instigator = GetInstigator();
+	SpawnInfo.ObjectFlags |= RF_Transient;
+	SpawnInfo.bDeferConstruction = true;
+
+	if (UClass* PawnClass = GetDefaultPawnClassForController(NewPlayer))
+	{
+		if (APawn* SpawnedPawn = GetWorld()->SpawnActor<APawn>(PawnClass, SpawnTransform, SpawnInfo))
+		{
+			// FindPawnExtensionComponent ±¸Çö
+			if (UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(SpawnedPawn))
+			{
+				if (const UTulPawnData* PawnData = GetPawnDataForController(NewPlayer))
+				{
+					PawnExtComp->SetPawnData(PawnData);
+				}
+			}
+			SpawnedPawn->FinishSpawning(SpawnTransform);
+			return SpawnedPawn;
+		}
+	}
+
+	return nullptr;
 }
 
 void ATulGameModeBase::HandleMatchAssignmentIfNotExpectingOne()

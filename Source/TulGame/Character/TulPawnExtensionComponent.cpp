@@ -16,6 +16,24 @@ UTulPawnExtensionComponent::UTulPawnExtensionComponent(const FObjectInitializer&
 }
 
 PRAGMA_DISABLE_OPTIMIZATION
+void UTulPawnExtensionComponent::SetPawnData(const UTulPawnData* InPawnData)
+{
+	// Pawn에 대해 Authority가 없을 경우, SetPawnData는 진행하지 않음
+	APawn* Pawn = GetPawnChecked<APawn>();
+	if (Pawn->GetLocalRole() != ROLE_Authority)
+	{
+		return;
+	}
+
+	if (PawnData)
+	{
+		return;
+	}
+
+	// PawnData 업데이트
+	PawnData = InPawnData;
+}
+
 void UTulPawnExtensionComponent::OnRegister()
 {
 	Super::OnRegister();
@@ -74,12 +92,73 @@ void UTulPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReaso
 
 void UTulPawnExtensionComponent::OnActorInitStateChanged(const FActorInitStateChangedParams& Params)
 {
-	IGameFrameworkInitStateInterface::OnActorInitStateChanged(Params);
+	if (Params.FeatureName != NAME_ActorFeatureName)
+	{
+		// TunPawnExtensionComponent는 다른 Feature Component들의 상태가 DataAvailable을 관찰하여, Sync를 맞추는 구간이 있었다 (CanChangeInitState)
+		// - 이를 가능케하기 위해, OnActorInitStateChanged에서는 DataAvailable에 대해 지속적으로 CheckDefaultInitialization을 호출하여, 상태를 확인한다
+		const FTulGameplayTags& InitTags = FTulGameplayTags::Get();
+		if (Params.FeatureState == InitTags.InitState_DataAvailable)
+		{
+			CheckDefaultInitialization();
+		}
+	}
 }
 
 bool UTulPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
-	return IGameFrameworkInitStateInterface::CanChangeInitState(Manager, CurrentState, DesiredState);
+	check(Manager);
+
+	APawn* Pawn = GetPawn<APawn>();
+	const FTulGameplayTags& InitTags = FTulGameplayTags::Get();
+
+	// InitState_Spawned 초기화
+	if (!CurrentState.IsValid() && DesiredState == InitTags.InitState_Spawned)
+	{
+		// Pawn이 잘 세팅만 되어있으면 바로 Spawned로 넘어감!
+		if (Pawn)
+		{
+			return true;
+		}
+	}
+
+	// Spawned -> DataAvailable
+	if (CurrentState == InitTags.InitState_Spawned && DesiredState == InitTags.InitState_DataAvailable)
+	{
+		// 아마 PawnData를 누군가 설정하는 모양이다
+		if (!PawnData)
+		{
+			return false;
+		}
+
+		// LocallyControlled인 Pawn이 Controller가 없으면 에러!
+		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
+		if (bIsLocallyControlled)
+		{
+			if (!GetController<AController>())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// DataAvailable -> DataInitialized
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		// Actor에 바인드된 모든 Feature들이 DataAvailable 상태일 때, DataInitialized로 넘어감:
+		// - HaveAllFeaturesReachedInitState 확인
+		return Manager->HaveAllFeaturesReachedInitState(Pawn, InitTags.InitState_DataAvailable);
+	}
+
+	// DataInitialized -> GameplayReady
+	if (CurrentState == InitTags.InitState_DataInitialized && DesiredState == InitTags.InitState_GameplayReady)
+	{
+		return true;
+	}
+
+	// 위의 선형적인(linear) transition이 아니면 false
+	return false;
 }
 
 void UTulPawnExtensionComponent::CheckDefaultInitialization()
