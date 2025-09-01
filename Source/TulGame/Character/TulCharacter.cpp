@@ -35,5 +35,8 @@ void ATulCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Pawn이 Possess로서, Controller와 PlayerState 정보 접근이 가능한 상태가 되었음:
+	// - SetupPlayerInputComponent 확인
+	PawnExtComponent->SetupPlayerInputComponent();
 }
 

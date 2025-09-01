@@ -2,6 +2,7 @@
 
 
 #include "TulHeroComponent.h"
+#include "TulPawnData.h"
 #include "TulPawnExtensionComponent.h"
 #include "Components/GameFrameworkComponentManager.h"
 #include "TulGame/Player/TulPlayerState.h"
@@ -114,7 +115,27 @@ bool UTulHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manag
 
 void UTulHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
 {
-	IGameFrameworkInitStateInterface::HandleChangeInitState(Manager, CurrentState, DesiredState);
+	const FTulGameplayTags& InitTags = FTulGameplayTags::Get();
+
+	// DataAvailable -> DataInitialized 단계
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		APawn* Pawn = GetPawn<APawn>();
+		ATulPlayerState* TulPS = GetPlayerState<ATulPlayerState>();
+		if (!ensure(Pawn && TulPS))
+		{
+			return;
+		}
+
+		// Input 과 Camera에 대한 핸들링... (TODO)
+
+		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
+		const UTulPawnData* PawnData = nullptr;
+		if (UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			PawnData = PawnExtComp->GetPawnData<UTulPawnData>();
+		}
+	}
 }
 
 void UTulHeroComponent::CheckDefaultInitialization()
