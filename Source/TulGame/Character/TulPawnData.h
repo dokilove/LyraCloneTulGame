@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "TulPawnData.generated.h"
 
+class UTulCameraMode;
+
 /**
  * 
  */
@@ -20,4 +22,8 @@ public:
 	/** Pawn¿« Class*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tul|Pawn")
 	TSubclassOf<APawn> PawnClass;
+
+	/** Camera Mode */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tul|Camera")
+	TSubclassOf<UTulCameraMode> DefaultCameraMode;
 };

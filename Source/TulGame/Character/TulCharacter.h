@@ -7,6 +7,7 @@
 #include "TulCharacter.generated.h"
 
 class UTulPawnExtensionComponent;
+class UTulCameraComponent;
 
 UCLASS()
 class TULGAME_API ATulCharacter : public ACharacter
@@ -31,4 +32,7 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tul|Character")
 	TObjectPtr<UTulPawnExtensionComponent> PawnExtComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tul|Character")
+	TObjectPtr<UTulCameraComponent> CameraComponent;
 };

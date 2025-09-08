@@ -14,4 +14,6 @@ class TULGAME_API ATulPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	ATulPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 };

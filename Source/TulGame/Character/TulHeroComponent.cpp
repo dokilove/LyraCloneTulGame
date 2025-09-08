@@ -8,6 +8,7 @@
 #include "TulGame/Player/TulPlayerState.h"
 #include "TulGame/TulGameplayTags.h"
 #include "TulGame/TulLogChannels.h"
+#include "TulGame/Camera/TulCameraComponent.h"
 
 const FName UTulHeroComponent::NAME_ActorFeatureName("Hero");
 
@@ -135,6 +136,15 @@ void UTulHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Ma
 		{
 			PawnData = PawnExtComp->GetPawnData<UTulPawnData>();
 		}
+
+		if (bIsLocallyControlled && PawnData)
+		{
+			// 현재 TulCharacter에 Attach된 CameraComponent를 찾음
+			if (UTulCameraComponent* CameraComponent = UTulCameraComponent::FindCameraComponent(Pawn))
+			{
+				CameraComponent->DetermineCameraModeDelegate.BindUObject(this, &ThisClass::DetermineCameraMode);
+			}
+		}
 	}
 }
 
@@ -147,3 +157,24 @@ void UTulHeroComponent::CheckDefaultInitialization()
 	static const TArray<FGameplayTag> StateChain = { InitTags.InitState_Spawned, InitTags.InitState_DataAvailable, InitTags.InitState_DataInitialized, InitTags.InitState_GameplayReady };
 	ContinueInitStateChain(StateChain);
 }
+
+PRAGMA_DISABLE_OPTIMIZATION
+TSubclassOf<UTulCameraMode> UTulHeroComponent::DetermineCameraMode() const
+{
+	const APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return nullptr;
+	}
+
+	if (UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		if (const UTulPawnData* PawnData = PawnExtComp->GetPawnData<UTulPawnData>())
+		{
+			return PawnData->DefaultCameraMode;
+		}
+	}
+
+	return nullptr;
+}
+PRAGMA_ENABLE_OPTIMIZATION

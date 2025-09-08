@@ -3,6 +3,7 @@
 
 #include "TulCharacter.h"
 #include "TulPawnExtensionComponent.h"
+#include "TulGame/Camera/TulCameraComponent.h"
 
 // Sets default values
 ATulCharacter::ATulCharacter()
@@ -14,6 +15,12 @@ ATulCharacter::ATulCharacter()
 
 	// PawnExtComponent 持失
 	PawnExtComponent = CreateDefaultSubobject<UTulPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+
+	// CameraComponent 持失
+	{
+		CameraComponent = CreateDefaultSubobject<UTulCameraComponent>(TEXT("CameraComponent"));
+		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
+	}
 }
 
 // Called when the game starts or when spawned
