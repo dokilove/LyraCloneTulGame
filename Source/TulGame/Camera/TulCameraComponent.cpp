@@ -25,6 +25,11 @@ void UTulCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& Desir
 	check(CameraModeStack);
 
 	UpdateCameraModes();
+
+	// EvaluteStack은 CameraModeStack에 있는 CameraMode를 업데이트 (+블렌딩)하고 CameraModeStack을 Bottom-Top까지 업데이트된 CameraMode들을 Lerp를 진행해줌
+	// - 이에 대한 결과는 CameraModeView에 캐싱된다
+	FTulCameraModeView CameraModeView;
+	CameraModeStack->EvaluateStack(DeltaTime, CameraModeView);
 }
 
 void UTulCameraComponent::UpdateCameraModes()
@@ -35,9 +40,9 @@ void UTulCameraComponent::UpdateCameraModes()
 	// - 해당 Delegate는 HeroComponent의 멤버 함수로 바인딩되어 있다.
 	if (DetermineCameraModeDelegate.IsBound())
 	{
-		if (const TSubclassOf<UTulCameraMode> CameraMode = DetermineCameraModeDelegate.Execute())
+		if (TSubclassOf<UTulCameraMode> CameraMode = DetermineCameraModeDelegate.Execute())
 		{
-			// CameraModeStack->PushCameraMode(CameraMode);
+			CameraModeStack->PushCameraMode(CameraMode);
 		}
 	}
 }
