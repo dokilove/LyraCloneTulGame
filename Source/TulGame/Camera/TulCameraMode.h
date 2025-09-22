@@ -14,10 +14,28 @@ struct FTulCameraModeView
 {
 	FTulCameraModeView();
 
+	void Blend(const FTulCameraModeView& Other, float OtherWeight);
+
 	FVector Location;
 	FRotator Rotation;
 	FRotator ControlRotation;
 	float FieldOfView;
+};
+
+/**
+*  [0, 1]을 BlendFuction 에 맞게 재매핑을 위한 타입
+*/
+UENUM(BlueprintType)
+enum class ETulCameraModelBlendFunction : uint8
+{
+	Linear,
+	/**
+	* Ease In/Out은 exponent 값에 의해 조절된다:
+	*/
+	EaseIn,
+	EaseOut,
+	EaseInOut,
+	COUNT
 };
 
 /** Camera Blending 대상 유닛 */
@@ -70,6 +88,15 @@ public:
 	* 앞서 BlendAlpha의 선형 값을 매핑하여 최종 BlendWeight를 계산 (코드를 보며, 이해해보자)
 	*/
 	float BlendWeight;
+
+	/** 
+	* EaseIn/Out에 사용한 Exponent
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = "Blending")
+	float BlendExponent;
+
+	/** Blend function */
+	ETulCameraModelBlendFunction BlendFunction;
 };
 
 /** Camera Blending 을 담당a하는 객체 */

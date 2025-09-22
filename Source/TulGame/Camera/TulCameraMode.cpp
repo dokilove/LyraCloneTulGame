@@ -14,6 +14,32 @@ FTulCameraModeView::FTulCameraModeView()
 
 }
 
+void FTulCameraModeView::Blend(const FTulCameraModeView& Other, float OtherWeight)
+{
+	if (OtherWeight <= 0.0f)
+	{
+		return;
+	}
+	else if (OtherWeight >= 1.0f)
+	{
+		// Weight가 1.0이면 Other를 덮어쓰면 된다
+		*this = Other;
+		return;
+	}
+
+	// Location + OtherWeight * (Other.Location - Location);
+	Location = FMath::Lerp(Location, Other.Location, OtherWeight);
+
+	// Location과 같은 방식 Lerp(ControlRotation과 FieldOfView도 같음)
+	const FRotator DeltaRotation = (Other.Rotation - Rotation).GetNormalized();
+	Rotation = Rotation + (OtherWeight * DeltaRotation);
+
+	const FRotator DeltaControlRotation = (Other.ControlRotation - ControlRotation).GetNormalized();
+	ControlRotation = ControlRotation + (OtherWeight * DeltaControlRotation);
+
+	FieldOfView = FMath::Lerp(FieldOfView, Other.FieldOfView, OtherWeight);
+}
+
 UTulCameraMode::UTulCameraMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	FieldOfView = TUL_CAMERA_DEFAULT_FOV;
@@ -23,6 +49,9 @@ UTulCameraMode::UTulCameraMode(const FObjectInitializer& ObjectInitializer) : Su
 	BlendTime = 0.0f;
 	BlendAlpha = 1.0f;
 	BlendWeight = 1.0f;
+
+	BlendFunction = ETulCameraModelBlendFunction::EaseOut;
+	BlendExponent = 4.0f;
 }
 
 void UTulCameraMode::UpdateCameraMode(float DeltaTime)
@@ -56,6 +85,39 @@ void UTulCameraMode::UpdateView(float DeltaTime)
 
 void UTulCameraMode::UpdateBlending(float DeltaTime)
 {
+	// BlendAlpha를 DeltaTime을 통해 계산
+	if (BlendTime > 0.f)
+	{
+		// BlendTime은 Blending 과정 총 시간(초)
+		// - BlendAlpha는 0 -> 1로 변화하는 과정:
+		// - DeltaTime을 활용하여, BlendTime을 1로 볼 경우, 진행 정도를 누적
+		BlendAlpha += (DeltaTime / BlendTime);
+	}
+	else
+	{
+		BlendAlpha = 1.0f;
+	}
+
+	// BlendWeight를 [0,1]를 BlendFunction에 맞게 재매핑
+	const float Exponent = (BlendExponent > 0.0f) ? BlendExponent : 1.0f;
+	switch (BlendFunction)
+	{
+	case ETulCameraModelBlendFunction::Linear:
+		BlendWeight = BlendAlpha;
+		break;
+	case ETulCameraModelBlendFunction::EaseIn:
+		BlendWeight = FMath::InterpEaseIn(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	case ETulCameraModelBlendFunction::EaseOut:
+		BlendWeight = FMath::InterpEaseOut(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	case ETulCameraModelBlendFunction::EaseInOut:
+		BlendWeight = FMath::InterpEaseInOut(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	default:
+		checkf(false, TEXT("UpdateBlending: Invalid BlendFunction [%d]\n"), (uint8)BlendFunction);
+		break;
+	}
 }
 
 UTulCameraComponent* UTulCameraMode::GetTulCameraComponent() const
@@ -250,4 +312,28 @@ void UTulCameraModeStack::UpdateStack(float DeltaTime)
 
 void UTulCameraModeStack::BlendStack(FTulCameraModeView& OutCameraModeView)
 {
+	const int32 StackSize = CameraModeStack.Num();
+	if (StackSize <= 0)
+	{
+		return;
+	}
+
+	// CameraModeStack은 Bottom -> Top 순서로 Blend를 진행한다
+	const UTulCameraMode* CameraMode = CameraModeStack[StackSize - 1];
+	check(CameraMode);
+
+	// 참고로 가장 아래 (Bottom)은 BlendWeight가 1.0dlek
+	OutCameraModeView = CameraMode->View;
+
+	// 이미 Index = [StackSize - 1] 이미 OutCameraModeView로 지정했으므로, StackSize - 2부터 순회하면 된다
+	for (int32 StackIndex = (StackSize - 2); StackIndex >= 0; --StackIndex)
+	{
+		CameraMode = CameraModeStack[StackIndex];
+		check(CameraMode);
+
+		// TulCameraModeView Blend 함수를 구현하자
+		OutCameraModeView.Blend(CameraMode->View, CameraMode->BlendWeight);
+	}
+
+
 }
