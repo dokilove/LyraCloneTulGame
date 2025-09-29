@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/PawnComponent.h"
 #include "Components/GameFrameworkInitStateInterface.h"
+#include "TulGame/Input/TulMappableConfigPair.h"
 #include "TulHeroComponent.generated.h"
 
+struct FInputActionValue;
 class UTulCameraMode;
 
 /**
@@ -45,4 +47,13 @@ public:
 	* member methods
 	*/
 	TSubclassOf<UTulCameraMode> DetermineCameraMode() const;
+	void InitializePlayerInput(UInputComponent* PlayerInputComponent);
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_LookMouse(const FInputActionValue& InputActionValue);
+
+	/**
+	* member variables
+	*/
+	UPROPERTY(EditAnywhere)
+	TArray<FTulMappableConfigPair> DefaultInputConfigs;
 };

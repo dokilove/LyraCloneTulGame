@@ -32,6 +32,12 @@ struct FTulGameplayTags
 	FGameplayTag InitState_DataInitialized;
 	FGameplayTag InitState_GameplayReady;
 
+	/**
+	* Enhanced Input Tags
+	*/
+	FGameplayTag InputTag_Move;
+	FGameplayTag InputTag_Look_Mouse;
+
 private:
 	// static 변수 초기화는 .cpp에 해주는 것을 잊지말기!
 	static FTulGameplayTags GameplayTags;

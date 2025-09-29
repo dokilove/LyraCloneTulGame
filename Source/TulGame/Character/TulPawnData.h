@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "TulPawnData.generated.h"
 
+class UTulInputConfig;
 class UTulCameraMode;
 
 /**
@@ -26,4 +27,8 @@ public:
 	/** Camera Mode */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tul|Camera")
 	TSubclassOf<UTulCameraMode> DefaultCameraMode;
+
+	/** input configuration used by player controlled pawns to create input mappings and bind input actions */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TUL|InputConfig")
+	TObjectPtr<UTulInputConfig> InputConfig;
 };
