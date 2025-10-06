@@ -22,6 +22,8 @@ public class TulGame : ModuleRules
 			// Input
 			"InputCore",
 			"EnhancedInput",
+			// CommonUser
+			"CommonUser",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
