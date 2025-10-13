@@ -11,6 +11,7 @@
 #include "TulGame/Player/TulPlayerState.h"
 #include "TulGame/Character/TulPawnData.h"
 #include "TulGame/Character/TulPawnExtensionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATulGameModeBase::ATulGameModeBase()
 {
@@ -103,6 +104,14 @@ void ATulGameModeBase::HandleMatchAssignmentIfNotExpectingOne()
 	// - default experience
 
 	UWorld* World = GetWorld();
+
+	//우리가 앞서, URL과 함께 ExtraArgs로 넘겼던 정보는 OptionString에 저장되어 있다
+	if (!ExperienceId.IsValid() && UGameplayStatics::HasOption(OptionsString, TEXT("Experience")))
+	{
+		// Experience의 Value를 가져와서, PrimaryAssetId를 생성해준다: 이때 TulExperienceDefinition의 Class이름을 사용한다
+		const FString ExperienceFromOptions = UGameplayStatics::ParseOption(OptionsString, TEXT("Experience"));
+		ExperienceId = FPrimaryAssetId(FPrimaryAssetType(UTulExperienceDefinition::StaticClass()->GetFName()), FName(*ExperienceFromOptions));
+	}
 
 	// fall back to the default experience
 	// 일단 기본 옵션으로 default하게 B_TulDefaultExperience로 설정해놓자
