@@ -15,7 +15,11 @@
 #include "TulGame/Player/TulPlayerController.h"
 #include "TulGame/Player/TulPlayerState.h"
 
+/** FeatureName 정의: static member variable 초기화 */
 const FName UTulHeroComponent::NAME_ActorFeatureName("Hero");
+
+/** InputConfig의 GameFeatureAction 활성화 ExtensionEvent 이름 */
+const FName UTulHeroComponent::NAME_BindInputsNow("BindInputsNow");
 
 UTulHeroComponent::UTulHeroComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -250,7 +254,8 @@ void UTulHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompon
 		}
 	}
 
-
+	// GameFeatureAction_AddInputConfig의 HandlePawnExtension 콜백 함수 전달
+	UGameFrameworkComponentManager::SendGameFrameworkComponentExtensionEvent(const_cast<APawn*>(Pawn), NAME_BindInputsNow);
 }
 
 void UTulHeroComponent::Input_Move(const FInputActionValue& InputActionValue)

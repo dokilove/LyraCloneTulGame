@@ -174,6 +174,7 @@ void UTulExperienceManagerComponent::OnGameFeaturePluginLoadComplete(const UE::G
 	}
 }
 
+PRAGMA_DISABLE_OPTIMIZATION
 void UTulExperienceManagerComponent::OnExperienceFullLoadCompleted()
 {
 	check(LoadState != ETulExperienceLoadState::Loaded);
@@ -202,7 +203,7 @@ void UTulExperienceManagerComponent::OnExperienceFullLoadCompleted()
 					{
 						Action->OnGameFeatureRegistering();
 						Action->OnGameFeatureLoading();
-						Action->OnGameFeatureActivating();
+						Action->OnGameFeatureActivating(Context);
 					}
 				}
 			};
@@ -221,6 +222,7 @@ void UTulExperienceManagerComponent::OnExperienceFullLoadCompleted()
 	OnExperienceLoaded.Broadcast(CurrentExperience);
 	OnExperienceLoaded.Clear();
 }
+PRAGMA_ENABLE_OPTIMIZATION
 
 const UTulExperienceDefinition* UTulExperienceManagerComponent::GetCurrentExperienceChecked() const
 {
