@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "ModularPlayerController.h"
 #include "TulPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TULGAME_API ATulPlayerController : public APlayerController
+class TULGAME_API ATulPlayerController : public AModularPlayerController
 {
 	GENERATED_BODY()
 	

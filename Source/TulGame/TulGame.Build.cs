@@ -19,6 +19,7 @@ public class TulGame : ModuleRules
 			// Game Features
 			"ModularGameplay",
 			"GameFeatures",
+			"ModularGameplayActors",
 			// Input
 			"InputCore",
 			"EnhancedInput",

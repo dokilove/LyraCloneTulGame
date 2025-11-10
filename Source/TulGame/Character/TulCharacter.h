@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "ModularCharacter.h"
 #include "TulCharacter.generated.h"
 
 class UTulPawnExtensionComponent;
 class UTulCameraComponent;
 
 UCLASS()
-class TULGAME_API ATulCharacter : public ACharacter
+class TULGAME_API ATulCharacter : public AModularCharacter
 {
 	GENERATED_BODY()
 
