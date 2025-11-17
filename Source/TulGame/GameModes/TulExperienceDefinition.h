@@ -40,6 +40,6 @@ public:
 	TArray<TObjectPtr<UTulExperienceActionSet>> ActionSets;
 
 	/** 일반적인 GameFeatureAction으로서 추가 */
-	UPROPERTY(EditDefaultsOnly, Category = "Actions")
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "Actions")
 	TArray<TObjectPtr<UGameFeatureAction>> Actions;
 };
