@@ -7,6 +7,8 @@
 #include "Components/ControllerComponent.h"
 #include "TulControllerComponent_CharacterParts.generated.h"
 
+class UTulPawnComponent_CharacterParts;
+
 /** ControllerComponent가 소유하는 Character Parts */
 USTRUCT()
 struct FTulControllerCharacterPartEntry
@@ -29,6 +31,12 @@ class TULGAME_API UTulControllerComponent_CharacterParts : public UControllerCom
 	
 public:
 	UTulControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UTulPawnComponent_CharacterParts* GetPawnCustomizer() const;
+
+	UFUNCTION(BlueprintCallable, Category = Cosmetics)
+	void AddCharacterPart(const FTulCharacterPart& NewPart);
+	void AddCharacterPartInternal(const FTulCharacterPart& NewPart);
 
 	UPROPERTY(EditAnywhere, Category = Cosmetics)
 	TArray<FTulControllerCharacterPartEntry> CharacterParts;

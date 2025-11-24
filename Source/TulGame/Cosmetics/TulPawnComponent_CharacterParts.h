@@ -41,6 +41,10 @@ struct FTulCharacterPartList
 	FTulCharacterPartList(UTulPawnComponent_CharacterParts* InOwnerComponent) : OwnerComponent(InOwnerComponent)
 	{}
 
+	bool SpawnActorForEntry(FTulAppliedCharacterPartEntry& Entry);
+
+	FTulCharacterPartHandle AddEntry(FTulCharacterPart NewPart);
+
 	/** 현재 인스턴스화된 Character Part */
 	UPROPERTY()
 	TArray<FTulAppliedCharacterPartEntry> Entries;
@@ -60,6 +64,12 @@ class TULGAME_API UTulPawnComponent_CharacterParts : public UPawnComponent
 
 public:
 	UTulPawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	USkeletalMeshComponent* GetParentMeshComponent() const;
+	USceneComponent* GetSceneComponentToAttachTo() const;
+	void BroadcastChanged();
+
+	FTulCharacterPartHandle AddCharacterPart(const FTulCharacterPart& NewPart);
 
 	/** 인스턴스 화 된 Character Parts */
 	UPROPERTY()
