@@ -42,8 +42,12 @@ struct FTulCharacterPartList
 	{}
 
 	bool SpawnActorForEntry(FTulAppliedCharacterPartEntry& Entry);
+	void DestroyActorForEntry(FTulAppliedCharacterPartEntry& Entry);
 
 	FTulCharacterPartHandle AddEntry(FTulCharacterPart NewPart);
+	void RemoveEntry(FTulCharacterPartHandle Handle);
+
+	FGameplayTagContainer CollectCombinedTags() const;
 
 	/** 현재 인스턴스화된 Character Part */
 	UPROPERTY()
@@ -67,9 +71,11 @@ public:
 
 	USkeletalMeshComponent* GetParentMeshComponent() const;
 	USceneComponent* GetSceneComponentToAttachTo() const;
+	FGameplayTagContainer GetCombinedTags(FGameplayTag RequiredPrefix) const;
 	void BroadcastChanged();
 
 	FTulCharacterPartHandle AddCharacterPart(const FTulCharacterPart& NewPart);
+	void RemoveCharacterPart(FTulCharacterPartHandle Handle);
 
 	/** 인스턴스 화 된 Character Parts */
 	UPROPERTY()

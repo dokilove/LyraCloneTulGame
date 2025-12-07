@@ -2,9 +2,10 @@
 
 
 #include "TulPawnComponent_CharacterParts.h"
+#include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
 
-UTulPawnComponent_CharacterParts::UTulPawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UTulPawnComponent_CharacterParts::UTulPawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), CharacterPartList(this)
 {
 }
 
@@ -26,7 +27,7 @@ USkeletalMeshComponent* UTulPawnComponent_CharacterParts::GetParentMeshComponent
 
 USceneComponent* UTulPawnComponent_CharacterParts::GetSceneComponentToAttachTo() const
 {
-    // Parent에 SkeletalMeshComponent가 있으면 반환학소
+    // Parent에 SkeletalMeshComponent가 있으면 반환하고
     if (USkeletalMeshComponent* MeshComponent = GetParentMeshComponent())
     {
         return MeshComponent;
@@ -42,13 +43,52 @@ USceneComponent* UTulPawnComponent_CharacterParts::GetSceneComponentToAttachTo()
     return nullptr;
 }
 
+FGameplayTagContainer UTulPawnComponent_CharacterParts::GetCombinedTags(FGameplayTag RequiredPrefix) const
+{
+    // 현재 장착된 CharacterPartList의 Merge된 tags를 반환한다
+    FGameplayTagContainer Result = CharacterPartList.CollectCombinedTags();
+    if (RequiredPrefix.IsValid())
+    {
+        // 만약 GameplayTag를 통해 필터링할 경우, 필터링해서 진행한다
+        return Result.Filter(FGameplayTagContainer(RequiredPrefix));
+    }
+    else
+    {
+        // 필터링할 GameplayTag가 없으면 그냥 반환
+        return Result;
+    }
+}
+
 void UTulPawnComponent_CharacterParts::BroadcastChanged()
 {
+    const bool bReinitPose = true;
+
+    // 현재 Owner의 SkeletalMeshComponent를 반환한다
+    if (USkeletalMeshComponent* MeshComponent = GetParentMeshComponent())
+    {
+        // BodyMeshed를 통해, GameplayTag를 활용하여, 알맞은 SkeletalMesh로 재설정해준다
+        const FGameplayTagContainer MergedTags = GetCombinedTags(FGameplayTag());
+        USkeletalMesh* DesiredMesh = BodyMeshes.SelectBestBodyStyle(MergedTags);
+
+        // SkeletalMesh를 초기화 및 Animation 초기화 시켜준다
+        MeshComponent->SetSkeletalMesh(DesiredMesh, bReinitPose);
+
+        // PhysicsAsset을 초기화해준다
+        if (UPhysicsAsset* PhysicsAsset = BodyMeshes.ForcedPhysicsAsset)
+        {
+            MeshComponent->SetPhysicsAsset(PhysicsAsset, bReinitPose);
+        }
+    }
 }
 
 FTulCharacterPartHandle UTulPawnComponent_CharacterParts::AddCharacterPart(const FTulCharacterPart& NewPart)
 {
     return CharacterPartList.AddEntry(NewPart);
+}
+
+void UTulPawnComponent_CharacterParts::RemoveCharacterPart(FTulCharacterPartHandle Handle)
+{
+    CharacterPartList.RemoveEntry(Handle);
 }
 
 bool FTulCharacterPartList::SpawnActorForEntry(FTulAppliedCharacterPartEntry& Entry)
@@ -92,6 +132,15 @@ bool FTulCharacterPartList::SpawnActorForEntry(FTulAppliedCharacterPartEntry& En
     return bCreatedAnyActor;
 }
 
+void FTulCharacterPartList::DestroyActorForEntry(FTulAppliedCharacterPartEntry& Entry)
+{
+    if (Entry.SpawnedComponent)
+    {
+        Entry.SpawnedComponent->DestroyComponent();
+        Entry.SpawnedComponent = nullptr;
+    }
+}
+
 FTulCharacterPartHandle FTulCharacterPartList::AddEntry(FTulCharacterPart NewPart)
 {
     // PawnComponent의 CharacterPartList가 PartHandle을 관리하고, 이를 ControllerComponent_CharacterParts에 전달한다
@@ -113,5 +162,43 @@ FTulCharacterPartHandle FTulCharacterPartList::AddEntry(FTulCharacterPart NewPar
         }
     }
 
+    return Result;
+}
+
+void FTulCharacterPartList::RemoveEntry(FTulCharacterPartHandle Handle)
+{
+    for (auto EntryIt = Entries.CreateIterator(); EntryIt; ++EntryIt)
+    {
+        FTulAppliedCharacterPartEntry& Entry = *EntryIt;
+
+        // 제거할 경우, PartHandle을 활용한다
+        if (Entry.PartHandle == Handle.PartHandle)
+        {
+            DestroyActorForEntry(Entry);
+        }
+    }
+}
+
+FGameplayTagContainer FTulCharacterPartList::CollectCombinedTags() const
+{
+    FGameplayTagContainer Result;
+
+    // Entries를 순회하며,
+    for (const FTulAppliedCharacterPartEntry& Entry : Entries)
+    {
+        // Part Actor가 생성되어 SpawnedComponent에 캐싱되어 있으면
+        if (Entry.SpawnedComponent)
+        {
+            // 해당 Actor의 IGameplayTagAssetInterface를 통해 GameplayTag를 검색한다:
+            // - 현재 우리의 TaggedActor는 IGameplayTagAssetInterface를 상속받지 않으므로 그냥 넘어갈 것이다
+            // - 후일 여러분들이 각 Part에 대해 GameplayTag를 넣고 싶다면 이걸 상속받아 정의해야 한다
+            // - 예로 들어, 특정 Lv100 이상 장착 가능한 장비를 만들고 싶다면 넣어야 겠다
+            if (IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(Entry.SpawnedComponent->GetChildActor()))
+            {
+                TagInterface->GetOwnedGameplayTags(Result);
+            }
+        }
+    }
+    
     return Result;
 }

@@ -32,11 +32,20 @@ class TULGAME_API UTulControllerComponent_CharacterParts : public UControllerCom
 public:
 	UTulControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	UTulPawnComponent_CharacterParts* GetPawnCustomizer() const;
 
 	UFUNCTION(BlueprintCallable, Category = Cosmetics)
 	void AddCharacterPart(const FTulCharacterPart& NewPart);
 	void AddCharacterPartInternal(const FTulCharacterPart& NewPart);
+
+	void RemoveAllCharacterParts();
+
+	/** UFUNCTION으로 정의하지 않으면 AddDynamic이 되지 않는다!*/
+	UFUNCTION()
+	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
 
 	UPROPERTY(EditAnywhere, Category = Cosmetics)
 	TArray<FTulControllerCharacterPartEntry> CharacterParts;
