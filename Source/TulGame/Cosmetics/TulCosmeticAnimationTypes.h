@@ -7,6 +7,32 @@
 #include "TulCosmeticAnimationTypes.generated.h"
 
 USTRUCT(BlueprintType)
+struct FTulAnimLayerSelectionEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> Layer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTagContainer RequiredTags;
+};
+
+USTRUCT(BlueprintType)
+struct FTulAnimLayerSelectionSet
+{
+	GENERATED_BODY()
+
+	/** 앞서 보았던 TulAnimBodyStyleSelection의 MeshRule과 같이 AnimInstance의 Rule을 가진 LayerRules로 생각하면 됨 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FTulAnimLayerSelectionEntry> LayerRules;
+
+	/** 디폴트 Layer */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> DefaultLayer;
+};
+
+USTRUCT(BlueprintType)
 struct FTulAnimBodyStyleSelectionEntry
 {
 	GENERATED_BODY()
