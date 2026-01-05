@@ -3,3 +3,6 @@
 
 #include "TulQuickBarComponent.h"
 
+UTulQuickBarComponent::UTulQuickBarComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+}

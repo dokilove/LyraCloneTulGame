@@ -3,3 +3,6 @@
 
 #include "TulEquipmentManagerComponent.h"
 
+UTulEquipmentManagerComponent::UTulEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), EquipmentList(this)
+{
+}

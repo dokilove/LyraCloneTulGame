@@ -3,3 +3,6 @@
 
 #include "TulEquipmentInstance.h"
 
+UTulEquipmentInstance::UTulEquipmentInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+}
