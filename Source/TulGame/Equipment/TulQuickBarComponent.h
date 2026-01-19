@@ -25,6 +25,14 @@ class TULGAME_API UTulQuickBarComponent : public UControllerComponent
 public:
 	UTulQuickBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/**
+	* ControllerComponent interface
+	*/
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemToSlot(int32 SlotIndex, UTulInventoryItemInstance* Item);
+
 	/** HUD QuickBar Slot °¹¼ö */
 	UPROPERTY()
 	int32 NumSlots = 3;

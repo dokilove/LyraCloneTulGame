@@ -16,5 +16,6 @@ class TULGAME_API UTulInventoryFragment_EquippableItem : public UTulInventoryIte
 {
 	GENERATED_BODY()
 public:
-	
+	UPROPERTY(EditAnywhere, Category = Tul)
+	TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition;
 };

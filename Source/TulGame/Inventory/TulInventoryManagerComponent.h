@@ -29,6 +29,8 @@ struct FTulInventoryList
 	FTulInventoryList(UActorComponent* InOwnerComponent = nullptr) : OwnerComponent(InOwnerComponent)
 	{}
 
+	UTulInventoryItemInstance* AddEntry(TSubclassOf<UTulInventoryItemDefinition> ItemDef);
+
 	UPROPERTY()
 	TArray<FTulInventoryEntry> Entries;
 
@@ -46,6 +48,10 @@ class TULGAME_API UTulInventoryManagerComponent : public UActorComponent
 	GENERATED_BODY()
 public:
 	UTulInventoryManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/** InventoryItemDefinition을 통해, InventoryList에 추가하여 관리하며, InventoryItemInstance를 반환한다*/
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	UTulInventoryItemInstance* AddItemDefinition(TSubclassOf<UTulInventoryItemDefinition> ItemDef);
 
 	UPROPERTY()
 	FTulInventoryList InventoryList;

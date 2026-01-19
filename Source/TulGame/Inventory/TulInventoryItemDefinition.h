@@ -24,7 +24,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class TULGAME_API UTulInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()
