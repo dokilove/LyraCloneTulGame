@@ -7,6 +7,7 @@
 #include "TulInventoryItemInstance.generated.h"
 
 class UTulInventoryItemDefinition;
+class UTulInventoryItemFragment;
 /**
  * 
  */
@@ -17,6 +18,14 @@ class TULGAME_API UTulInventoryItemInstance : public UObject
 	
 public:
 	UTulInventoryItemInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	const UTulInventoryItemFragment* FindFragmentByClass(TSubclassOf<UTulInventoryItemFragment> FragmentClass) const;
+
+	template <typename ResultClass>
+	const ResultClass* FindFragmentByClass() const
+	{
+		return (ResultClass*)FindFragmentByClass(ResultClass::StaticClass());
+	}
 
 	/** Inventory Item의 인스턴스에는 무엇으로 정의되었는지 메타 클래스인 TulInventoryItemDefinition을 들고 있다*/
 	UPROPERTY()

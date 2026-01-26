@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+struct FTulEquipmentActorToSpawn;
+
 UCLASS(BlueprintType, Blueprintable)
 class TULGAME_API UTulEquipmentInstance : public UObject
 {
@@ -16,6 +19,27 @@ class TULGAME_API UTulEquipmentInstance : public UObject
 
 public:
 	UTulEquipmentInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/**
+	* Blueprint 정의를 위한 Equip/Unequip 함수
+	*/
+	UFUNCTION(BlueprintImplementableEvent, Category = Equipment, meta = (DisplayName = "OnEquipped"))
+	void K2_OnEquipped();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Equipment, meta = (DisplayName = "OnUnequipped"))
+	void K2_OnUnequipped();
+
+	UFUNCTION(BlueprintPure, Category = Equipment)
+	APawn* GetPawn() const;
+
+	void SpawnEquipmentActors(const TArray<FTulEquipmentActorToSpawn>& ActorsToSpawn);
+	void DestroyEquipmentActors();
+
+	/**
+	* interfaces
+	*/
+	virtual void OnEquipped();
+	virtual void OnUnequipped();
 
 	/** 어떤 InventotyItemInstance에 의해 활성화되었는지 (추후, QuickBarComponent에서 보게 될 것이다) */
 	UPROPERTY()

@@ -36,6 +36,9 @@ struct FTulEquipmentList
 	FTulEquipmentList(UActorComponent* InOwnerComponent = nullptr) : OwnerComponent(InOwnerComponent)
 	{}
 
+	UTulEquipmentInstance* AddEntry(TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition);
+	void RemoveEntry(UTulEquipmentInstance* Instance);
+
 	/** 장착물에 대한 관리 리스트 */
 	UPROPERTY()
 	TArray<FTulAppliedEquipmentEntry> Entries;
@@ -54,6 +57,9 @@ class TULGAME_API UTulEquipmentManagerComponent : public UPawnComponent
 	
 public:
 	UTulEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UTulEquipmentInstance* EquipItem(TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition);
+	void UnequipItem(UTulEquipmentInstance* ItemInstance);
 
 	UPROPERTY()
 	FTulEquipmentList EquipmentList;

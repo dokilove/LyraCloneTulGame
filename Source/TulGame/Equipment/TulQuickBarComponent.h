@@ -8,6 +8,7 @@
 
 class UTulInventoryItemInstance;
 class UTulEquipmentInstance;
+class UTulEquipmentManagerComponent;
 
 /**
  * HUD의 QuickBar를 생각하면 된다:
@@ -30,8 +31,18 @@ public:
 	*/
 	virtual void BeginPlay() override;
 
+	/**
+	* member methods
+	*/
+	UTulEquipmentManagerComponent* FindEquipmentManager() const;
+	void UnequipItemInSlot();
+	void EquipItemInSlot();
+
 	UFUNCTION(BlueprintCallable)
 	void AddItemToSlot(int32 SlotIndex, UTulInventoryItemInstance* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "Tul")
+	void SetActiveSlotIndex(int32 NewIndex);
 
 	/** HUD QuickBar Slot 갯수 */
 	UPROPERTY()
