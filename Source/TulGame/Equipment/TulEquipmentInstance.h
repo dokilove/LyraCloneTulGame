@@ -36,6 +36,12 @@ public:
 	void DestroyEquipmentActors();
 
 	/**
+	* DeterminesOutputType은 C++ 정의에는 APawn* 반환하지만, BP에서는 PawnType에 따라 OutputType이 결정되도록 리다이렉트 한다
+	*/
+	UFUNCTION(BlueprintPure, Category = Equipment, meta = (DeterminesOutputType = PawnType))
+	APawn* GetTypedPawn(TSubclassOf<APawn> PawnType) const;
+
+	/**
 	* interfaces
 	*/
 	virtual void OnEquipped();
