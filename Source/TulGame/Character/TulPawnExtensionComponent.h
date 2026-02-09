@@ -7,6 +7,7 @@
 #include "Components/GameFrameworkInitStateInterface.h"
 #include "TulPawnExtensionComponent.generated.h"
 
+class UTulAbilitySystemComponent;
 class UTulPawnData;
 /**
  * 초기화 전반을 조정하는 컴퍼넌트
@@ -29,6 +30,9 @@ public:
 	const T* GetPawnData() const { return Cast<T>(PawnData); }
 	void SetPawnData(const UTulPawnData* InPawnData);
 	void SetupPlayerInputComponent();
+	/** AbilitySystemComponent의 AvatarActor 대상 초기화/ 해제 호출 */
+	void InitializeAbilitySystem(UTulAbilitySystemComponent* InASC, AActor* InOwnerActor);
+	void UninitializeAbilitySystem();
 
 	/*
 	* UPawnComponent interfaces
@@ -50,4 +54,8 @@ public:
 	*/
 	UPROPERTY(EditInstanceOnly, Category = "Tul|Pawn")
 	TObjectPtr<const UTulPawnData> PawnData;
+
+	/** AbilitySystemComponent 캐싱 */
+	UPROPERTY()
+	TObjectPtr<UTulAbilitySystemComponent> AbilitySystemComponent;
 };

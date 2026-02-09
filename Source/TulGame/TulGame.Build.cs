@@ -16,6 +16,8 @@ public class TulGame : ModuleRules
 			"EnhancedInput",
 			// GAS
 			"GameplayTags",
+			"GameplayTasks",
+			"GameplayAbilities",
 			// Game Features
 			"ModularGameplay",
 			"GameFeatures",

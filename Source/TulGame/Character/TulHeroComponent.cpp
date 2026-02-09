@@ -137,10 +137,19 @@ void UTulHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Ma
 			return;
 		}
 
-		// Input 과 Camera에 대한 핸들링... (TODO)
-
 		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		const UTulPawnData* PawnData = nullptr;
+		if (UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			PawnData = PawnExtComp->GetPawnData<UTulPawnData>();
+
+			// DataInitialized 단계까지 오면, Pawn이 Controller에 Posses되어 준비된 상태이다:
+			// -InitAbilityActorInfo 호출로 AvatarActor 재설정이 필요하다
+			PawnExtComp->InitializeAbilitySystem(TulPS->GetTulAbilitySystemComponent(), TulPS);
+		}
+
+		// Input 과 Camera에 대한 핸들링... (TODO)
+
 		if (UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 		{
 			PawnData = PawnExtComp->GetPawnData<UTulPawnData>();

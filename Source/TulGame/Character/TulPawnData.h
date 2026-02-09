@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "TulPawnData.generated.h"
 
+class UTulAbilitySet;
 class UTulInputConfig;
 class UTulCameraMode;
 
@@ -31,4 +32,8 @@ public:
 	/** input configuration used by player controlled pawns to create input mappings and bind input actions */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TUL|InputConfig")
 	TObjectPtr<UTulInputConfig> InputConfig;
+
+	/**  해당  Pawn의 Ability System에 허용할 AbilitySet */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tul|Abilities")
+	TArray<TObjectPtr<UTulAbilitySet>> AbilitySets;
 };
