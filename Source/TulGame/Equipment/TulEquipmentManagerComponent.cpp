@@ -4,6 +4,8 @@
 #include "TulEquipmentManagerComponent.h"
 #include "TulEquipmentDefinition.h"
 #include "TulEquipmentInstance.h"
+#include "AbilitySystemGlobals.h"
+#include "TulGame/AbilitySystem/TulAbilitySystemComponent.h"
 
 UTulEquipmentInstance* FTulEquipmentList::AddEntry(TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition)
 {
@@ -27,6 +29,16 @@ UTulEquipmentInstance* FTulEquipmentList::AddEntry(TSubclassOf<UTulEquipmentDefi
     NewEntry.Instance = NewObject<UTulEquipmentInstance>(OwnerComponent->GetOwner(), InstanceType);
     Result = NewEntry.Instance;
 
+    UTulAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+
+    check(ASC);
+    {
+        for (const TObjectPtr<UTulAbilitySet> AbilitySet : EquipmentCDO->AbilitySetsToGrant)
+        {
+            AbilitySet->GiveToAbilitySystem(ASC, &NewEntry.GrantedHandles, Result);
+        }
+    }
+
     // ActorsToSpawn을 통해, Actor들을 인스턴스화 해주자
     // - 어디에? EquipmentInstance에!
     Result->SpawnEquipmentActors(EquipmentCDO->ActorsToSpawn);
@@ -42,11 +54,30 @@ void FTulEquipmentList::RemoveEntry(UTulEquipmentInstance* Instance)
         FTulAppliedEquipmentEntry& Entry = *EntryIt;
         if (Entry.Instance == Instance)
         {
+            UTulAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+            check(ASC);
+            {
+                // TakeFromAbilitySystem은 GiveToAbilitySystem 반대 역할로, ActivatableAbilities에서 제거한다
+                Entry.GrantedHandles.TakeFromAbilitySystem(ASC);
+            }
+
             // Actor 제거 작업 및 iterator를 통한 안전하게 Array에서 제거 진행
             Instance->DestroyEquipmentActors();
             EntryIt.RemoveCurrent();
         }
     }
+}
+
+UTulAbilitySystemComponent* FTulEquipmentList::GetAbilitySystemComponent() const
+{
+    check(OwnerComponent);
+    AActor* OwningActor = OwnerComponent->GetOwner();
+
+    // GetAblitySystemComponentFromActor를 잠시 확인해보자:
+    // - EquipmentManagerComponent는 ATulCharacter를 Owner로 가지고 있다
+    // - 해당 함수는 IAbilitySystemInterface를 통해 AbilitySystemComponent를 반환한다
+    // - 우리는 TulCharactetr에 IAbilitySystemInterface를 상속받을 필요가 있다
+    return Cast<UTulAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }
 
 UTulEquipmentManagerComponent::UTulEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), EquipmentList(this)

@@ -15,6 +15,20 @@ void FTulAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilityS
 
 void FTulAbilitySet_GrantedHandles::TakeFromAbilitySystem(UTulAbilitySystemComponent* TulASC)
 {
+	if (TulASC->IsOwnerActorAuthoritative())
+	{
+		return;
+	}
+
+	for (const FGameplayAbilitySpecHandle& Handle : AbilitySpecHandles)
+	{
+		if (Handle.IsValid())
+		{
+			// ActivatableAbilities에서 제거한다:
+			// - ClearAbility() 함수를 잠깐 보고 오자
+			TulASC->ClearAbility(Handle);
+		}
+	}
 }
 
 UTulAbilitySet::UTulAbilitySet(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

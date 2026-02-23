@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/PawnComponent.h"
+#include "TulGame/AbilitySystem/TulAbilitySet.h"
 #include "TulEquipmentManagerComponent.generated.h"
 
 /** forward declarations */
@@ -22,6 +23,10 @@ struct FTulAppliedEquipmentEntry
 	/** EquipmentDefinition을 통해 생성된 인스턴스 */
 	UPROPERTY()
 	TObjectPtr<UTulEquipmentInstance> Instance = nullptr;
+
+	/** 무기에 할당된 허용가능한 Gameplay Ability*/
+	UPROPERTY()
+	FTulAbilitySet_GrantedHandles GrantedHandles;
 };
 
 /**
@@ -38,6 +43,8 @@ struct FTulEquipmentList
 
 	UTulEquipmentInstance* AddEntry(TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition);
 	void RemoveEntry(UTulEquipmentInstance* Instance);
+
+	UTulAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	/** 장착물에 대한 관리 리스트 */
 	UPROPERTY()

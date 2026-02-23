@@ -6,6 +6,9 @@
 #include "ModularPlayerController.h"
 #include "TulPlayerController.generated.h"
 
+class UTulAbilitySystemComponent;
+class ATulPlayerState;
+
 /**
  * 
  */
@@ -16,4 +19,15 @@ class TULGAME_API ATulPlayerController : public AModularPlayerController
 	
 public:
 	ATulPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/**
+	* Player Controller interface
+	*/
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
+	/**
+	* member methods
+	*/
+	ATulPlayerState* GetTulPlayerState() const;
+	UTulAbilitySystemComponent* GetTulAbilitySystemComponent() const;
 };

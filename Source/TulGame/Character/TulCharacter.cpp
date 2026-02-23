@@ -3,6 +3,7 @@
 
 #include "TulCharacter.h"
 #include "TulPawnExtensionComponent.h"
+#include "TulGame/AbilitySystem/TulAbilitySystemComponent.h"
 #include "TulGame/Camera/TulCameraComponent.h"
 
 // Sets default values
@@ -21,6 +22,12 @@ ATulCharacter::ATulCharacter()
 		CameraComponent = CreateDefaultSubobject<UTulCameraComponent>(TEXT("CameraComponent"));
 		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
 	}
+}
+
+UAbilitySystemComponent* ATulCharacter::GetAbilitySystemComponent() const
+{
+	// 앞서, 우리는 PawnExtensionComponent에 AbilitySystemComponent를 캐싱하였다
+	return PawnExtComponent->GetTulAbilitySystemComponent();
 }
 
 // Called when the game starts or when spawned

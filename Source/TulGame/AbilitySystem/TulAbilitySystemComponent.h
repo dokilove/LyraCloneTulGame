@@ -16,4 +16,16 @@ class TULGAME_API UTulAbilitySystemComponent : public UAbilitySystemComponent
 	
 public:
 	UTulAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/**
+	* member methods
+	*/
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	void PrecessAbilityInput(float DeltaTime, bool bGamePaused);
+
+	/** Ability Input Ã³¸®ÇÒ Pending Queue */
+	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
+	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
+	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 };

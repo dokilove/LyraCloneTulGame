@@ -30,6 +30,8 @@ public:
 	const T* GetPawnData() const { return Cast<T>(PawnData); }
 	void SetPawnData(const UTulPawnData* InPawnData);
 	void SetupPlayerInputComponent();
+	UTulAbilitySystemComponent* GetTulAbilitySystemComponent() const { return AbilitySystemComponent; }
+
 	/** AbilitySystemComponent의 AvatarActor 대상 초기화/ 해제 호출 */
 	void InitializeAbilitySystem(UTulAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	void UninitializeAbilitySystem();

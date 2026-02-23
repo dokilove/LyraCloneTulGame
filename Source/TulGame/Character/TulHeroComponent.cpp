@@ -14,6 +14,7 @@
 #include "TulGame/Camera/TulCameraComponent.h"
 #include "TulGame/Player/TulPlayerController.h"
 #include "TulGame/Player/TulPlayerState.h"
+#include "TulGame/AbilitySystem/TulAbilitySystemComponent.h"
 
 /** FeatureName 정의: static member variable 초기화 */
 const FName UTulHeroComponent::NAME_ActorFeatureName("Hero");
@@ -254,6 +255,13 @@ void UTulHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompon
 
 				UTulInputComponent* TulIC = CastChecked<UTulInputComponent>(PlayerInputComponent);
 				{
+					// InputTag_Move와 InputTag_Look_Mouse에 대해 각각 Input_Move()와 Input_LookMouse() 멤버 함수에 바인딩 시킨다:
+					// - 바인딩한 이후, Input 이벤트에 따라 멤버 함수가 트리거 된다
+					{
+						TArray<uint32> BindHandles;
+						TulIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, BindHandles);
+					}
+
 					// InputTag_Move와 InputTag_Look_Mouse에 대해 각각 Input_Move()와 Input_LookMouse() 멤버함수에 바인딩 시킨다
 					// - 바인딩한 이후, Input 이벤트에 따라 멤버 함수가 트리거 된다
 					TulIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
@@ -319,5 +327,33 @@ void UTulHeroComponent::Input_LookMouse(const FInputActionValue& InputActionValu
 		// Y에는 Pitch값
 		double AimInversionValue = -Value.Y;
 		Pawn->AddControllerPitchInput(AimInversionValue);
+	}
+}
+
+void UTulHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (UTulAbilitySystemComponent* TulASC = PawnExtComp->GetTulAbilitySystemComponent())
+			{
+				TulASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void UTulHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const UTulPawnExtensionComponent* PawnExtComp = UTulPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (UTulAbilitySystemComponent* TulASC = PawnExtComp->GetTulAbilitySystemComponent())
+			{
+				TulASC->AbilityInputTagReleased(InputTag);
+			}
+		}
 	}
 }

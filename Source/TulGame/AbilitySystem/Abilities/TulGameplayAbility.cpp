@@ -5,4 +5,5 @@
 
 UTulGameplayAbility::UTulGameplayAbility(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+	ActivationPolicy = ETulAbilityActivationPolicy::OnInputTriggered;
 }
