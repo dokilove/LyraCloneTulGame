@@ -6,6 +6,8 @@
 #include "TulGame/AbilitySystem/Abilities/TulGameplayAbility.h"
 #include "TulGameplayAbility_FromEquipment.generated.h"
 
+class UTulEquipmentInstance;
+
 /**
  * 
  */
@@ -13,5 +15,7 @@ UCLASS()
 class TULGAME_API UTulGameplayAbility_FromEquipment : public UTulGameplayAbility
 {
 	GENERATED_BODY()
+public:
+	UTulEquipmentInstance* GetAssociatedEquipment() const;
 	
 };
