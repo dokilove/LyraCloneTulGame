@@ -3,9 +3,30 @@
 
 #include "TulAbilitySystemComponent.h"
 #include "TulGame/AbilitySystem/Abilities/TulGameplayAbility.h"
+#include "GameFramework/Pawn.h"
+#include "TulGame/Animation/TulAnimInstance.h"
 
 UTulAbilitySystemComponent::UTulAbilitySystemComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+}
+
+void UTulAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
+{
+	FGameplayAbilityActorInfo* ActorInfo = AbilityActorInfo.Get();
+	check(ActorInfo);
+	check(InOwnerActor);
+
+	const bool bHasNewPawnAvatar = Cast<APawn>(InAvatarActor) && (InAvatarActor != ActorInfo->AvatarActor);
+
+	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
+
+	if (bHasNewPawnAvatar)
+	{
+		if (UTulAnimInstance* LyraAnimInst = Cast<UTulAnimInstance>(ActorInfo->GetAnimInstance()))
+		{
+			LyraAnimInst->InitializeWithAbilitySystem(this);
+		}
+	}
 }
 
 void UTulAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)

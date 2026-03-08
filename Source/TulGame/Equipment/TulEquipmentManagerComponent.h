@@ -68,6 +68,9 @@ public:
 	UTulEquipmentInstance* EquipItem(TSubclassOf<UTulEquipmentDefinition> EquipmentDefinition);
 	void UnequipItem(UTulEquipmentInstance* ItemInstance);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<UTulEquipmentInstance*> GetEquipmentInstancesOfType(TSubclassOf<UTulEquipmentInstance> InstanceType) const;
+
 	UPROPERTY()
 	FTulEquipmentList EquipmentList;
 };

@@ -109,3 +109,23 @@ void UTulEquipmentManagerComponent::UnequipItem(UTulEquipmentInstance* ItemInsta
         EquipmentList.RemoveEntry(ItemInstance);
     }
 }
+
+TArray<UTulEquipmentInstance*> UTulEquipmentManagerComponent::GetEquipmentInstancesOfType(TSubclassOf<UTulEquipmentInstance> InstanceType) const
+{
+    TArray<UTulEquipmentInstance*> Results;
+
+    // EquipmentList를 순회하며
+    for (const FTulAppliedEquipmentEntry& Entry : EquipmentList.Entries)
+    {
+        if (UTulEquipmentInstance* Instance = Entry.Instance)
+        {
+            // InstanceType에 맞는 Class이면 Results에 추가하여 반환
+            // - 우리의 경우, TulRangedWeaponInstance가 될거임
+            if (Instance->IsA(InstanceType))
+            {
+                Results.Add(Instance);
+            }
+        }
+    }
+    return Results;
+}
