@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ModularPlayerController.h"
+#include "CommonPlayerController.h"
 #include "TulPlayerController.generated.h"
 
 class UTulAbilitySystemComponent;
@@ -13,7 +13,7 @@ class ATulPlayerState;
  * 
  */
 UCLASS()
-class TULGAME_API ATulPlayerController : public AModularPlayerController
+class TULGAME_API ATulPlayerController : public ACommonPlayerController
 {
 	GENERATED_BODY()
 	

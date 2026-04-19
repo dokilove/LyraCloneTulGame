@@ -27,6 +27,12 @@ public class TulGame : ModuleRules
 			"EnhancedInput",
 			// CommonUser
 			"CommonUser",
+			// CommonGame
+			"CommonGame",
+			// CommonUI
+			"CommonUI",
+			// UMG
+			"UMG",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

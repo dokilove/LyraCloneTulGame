@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/GameInstance.h"
+#include "CommonGameInstance.h"
 #include "TulGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TULGAME_API UTulGameInstance : public UGameInstance
+class TULGAME_API UTulGameInstance : public UCommonGameInstance
 {
 	GENERATED_BODY()
 	
