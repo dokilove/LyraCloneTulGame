@@ -18,6 +18,15 @@ class COMMONGAME_API UGameUIManagerSubsystem : public UGameInstanceSubsystem
 
 public:
 
+	void SwitchToPolicy(UGameUIPolicy* InPolicy);
+
+	/**
+	* UGameInstanceSubsystem's interface
+	*/
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+
 	UPROPERTY(Transient)
 	TObjectPtr<UGameUIPolicy> CurrentPolicy = nullptr;
 
