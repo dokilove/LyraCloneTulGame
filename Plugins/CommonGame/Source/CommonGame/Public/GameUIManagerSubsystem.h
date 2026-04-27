@@ -7,6 +7,7 @@
 #include "GameUIManagerSubsystem.generated.h"
 
 class UGameUIPolicy;
+class UCommonLocalPlayer;
 
 /**
  * 
@@ -17,6 +18,7 @@ class COMMONGAME_API UGameUIManagerSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+	UGameUIManagerSubsystem();
 
 	void SwitchToPolicy(UGameUIPolicy* InPolicy);
 
@@ -26,6 +28,13 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+
+	/**
+	* UGameUIManagerSubsystem's interface
+	*/
+	virtual void NotifyPlayerAdded(UCommonLocalPlayer* LocalPlayer);
+	virtual void NotifyPlayerRemoved(UCommonLocalPlayer* LocalPlayer);
+	virtual void NotifyPlayerDestroyed(UCommonLocalPlayer* LocalPlayer);
 
 	UPROPERTY(Transient)
 	TObjectPtr<UGameUIPolicy> CurrentPolicy = nullptr;

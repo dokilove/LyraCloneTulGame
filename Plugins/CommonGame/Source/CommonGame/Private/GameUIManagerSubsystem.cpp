@@ -4,6 +4,10 @@
 #include "GameUIManagerSubsystem.h"
 #include "GameUIPolicy.h"
 
+UGameUIManagerSubsystem::UGameUIManagerSubsystem()
+{
+}
+
 void UGameUIManagerSubsystem::SwitchToPolicy(UGameUIPolicy* InPolicy)
 {
 	if (CurrentPolicy != InPolicy)
@@ -46,4 +50,28 @@ bool UGameUIManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 	}
 
 	return false;
+}
+
+void UGameUIManagerSubsystem::NotifyPlayerAdded(UCommonLocalPlayer* LocalPlayer)
+{
+	if (ensure(LocalPlayer) && CurrentPolicy)
+	{
+		CurrentPolicy->NotifyPlayerAdded(LocalPlayer);
+	}
+}
+
+void UGameUIManagerSubsystem::NotifyPlayerRemoved(UCommonLocalPlayer* LocalPlayer)
+{
+	if (LocalPlayer && CurrentPolicy)
+	{
+		CurrentPolicy->NotifyPlayerRemoved(LocalPlayer);
+	}
+}
+
+void UGameUIManagerSubsystem::NotifyPlayerDestroyed(UCommonLocalPlayer* LocalPlayer)
+{
+	if (LocalPlayer && CurrentPolicy)
+	{
+		CurrentPolicy->NotifyPlayerDestroyed(LocalPlayer);
+	}
 }
