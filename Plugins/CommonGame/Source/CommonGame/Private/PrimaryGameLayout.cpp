@@ -2,4 +2,17 @@
 
 
 #include "PrimaryGameLayout.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
 
+UPrimaryGameLayout::UPrimaryGameLayout(const FObjectInitializer& ObjectInitializer)
+{
+}
+
+void UPrimaryGameLayout::RegisterLayer(FGameplayTag LayerTag, UCommonActivatableWidgetContainerBase* LayerWidget)
+{
+	if (!IsDesignTime())
+	{
+		LayerWidget->SetTransitionDuration(0.0);
+		Layers.Add(LayerTag, LayerWidget);
+	}
+}
