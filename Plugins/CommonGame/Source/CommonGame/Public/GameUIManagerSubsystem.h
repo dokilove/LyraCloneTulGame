@@ -36,6 +36,9 @@ public:
 	virtual void NotifyPlayerRemoved(UCommonLocalPlayer* LocalPlayer);
 	virtual void NotifyPlayerDestroyed(UCommonLocalPlayer* LocalPlayer);
 
+	const UGameUIPolicy* GetCurrentUIPolicy() const { return CurrentPolicy; }
+	UGameUIPolicy* GetCurrentUIPolicy() { return CurrentPolicy; }
+
 	UPROPERTY(Transient)
 	TObjectPtr<UGameUIPolicy> CurrentPolicy = nullptr;
 

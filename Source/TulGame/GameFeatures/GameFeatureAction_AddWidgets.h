@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
 #include "GameplayTagContainer.h"
+#include "UIExtensionSystem.h"
 #include "GameFeatureAction_WorldActionBase.h"
 #include "GameFeatureAction_AddWidgets.generated.h"
 
@@ -52,8 +53,26 @@ public:
 		TArray<TWeakObjectPtr<UCommonActivatableWidget>> LayoutsAdded;
 
 		/** Lyra 에서 HUDElement 는 UIExtension으로 관린된다 */
-		//TArray<FUIExtensionHandle> ExtensionHandles;
+		TArray<FUIExtensionHandle> ExtensionHandles;
 	};
+
+	void AddWidgets(AActor* Actor, FPerContextData& ActiveData);
+	void RemoveWidgets(AActor* Actor, FPerContextData& ActiveData);
+
+	/**
+	* UGameFeatureAction's Interface
+	*/
+	virtual void OnGameFeatureDeactivating(FGameFeatureDeactivatingContext& Context) override;
+
+	/**
+	* UGameFeatureAction_WorldActionBase's interface
+	*/
+	virtual void AddToWorld(const FWorldContext& WorldContext, const FGameFeatureStateChangeContext& ChangeContext) override;
+
+	void HandleActorExtension(AActor* Actor, FName EventName, FGameFeatureStateChangeContext ChangeContext);
+
+	/** GFA Add/Remove 상태 관리 */
+	TMap<FGameFeatureStateChangeContext, FPerContextData> ContextData;
 
 	/**
 	* GFA_AddWidget은 형태를 정의하는 Layout과 Layout 위에 올릴 Widget 객체 Widgets으로 구성된다

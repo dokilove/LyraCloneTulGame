@@ -33,6 +33,8 @@ public class TulGame : ModuleRules
 			"CommonUI",
 			// UMG
 			"UMG",
+			// UIExtension
+			"UIExtension",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

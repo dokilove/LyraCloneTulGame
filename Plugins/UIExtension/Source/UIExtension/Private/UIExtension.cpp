@@ -1,15 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "UIExtention.h"
+#include "UIExtension.h"
 
-#define LOCTEXT_NAMESPACE "FUIExtentionModule"
+#define LOCTEXT_NAMESPACE "FUIExtensionModule"
 
-void FUIExtentionModule::StartupModule()
+void FUIExtensionModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FUIExtentionModule::ShutdownModule()
+void FUIExtensionModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -17,4 +17,4 @@ void FUIExtentionModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FUIExtentionModule, UIExtention)
+IMPLEMENT_MODULE(FUIExtensionModule, UIExtension)
