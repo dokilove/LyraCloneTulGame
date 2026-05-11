@@ -11,6 +11,7 @@
 #include "TulGame/Player/TulPlayerState.h"
 #include "TulGame/Character/TulPawnData.h"
 #include "TulGame/Character/TulPawnExtensionComponent.h"
+#include "TulGame/UI/TulHUD.h"
 #include "Kismet/GameplayStatics.h"
 
 ATulGameModeBase::ATulGameModeBase()
@@ -19,6 +20,7 @@ ATulGameModeBase::ATulGameModeBase()
 	PlayerControllerClass = ATulPlayerController::StaticClass();
 	PlayerStateClass = ATulPlayerState::StaticClass();
 	DefaultPawnClass = ATulCharacter::StaticClass();
+	HUDClass = ATulHUD::StaticClass();
 }
 
 void ATulGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
