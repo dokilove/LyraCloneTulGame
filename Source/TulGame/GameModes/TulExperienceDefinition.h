@@ -21,6 +21,10 @@ class TULGAME_API UTulExperienceDefinition : public UPrimaryDataAsset
 public:
 	UTulExperienceDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+#if WITH_EDITORONLY_DATA
+	virtual void UpdateAssetBundleData() override;
+#endif
+
 	/**
 	* member variables
 	*/

@@ -19,6 +19,10 @@ class TULGAME_API UTulExperienceActionSet : public UPrimaryDataAsset
 public:
 	UTulExperienceActionSet();
 
+#if WITH_EDITORONLY_DATA
+	virtual void UpdateAssetBundleData() override;
+#endif
+
 	/**
 	* member variables
 	*/

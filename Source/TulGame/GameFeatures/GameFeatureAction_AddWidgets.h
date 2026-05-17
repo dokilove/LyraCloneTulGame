@@ -18,7 +18,7 @@ struct FTulHUDLayoutRequest
 {
 	GENERATED_BODY()
 	/** UI의 레이아웃으로 CommonActivatableWidget을 사용 */
-	UPROPERTY(EditAnywhere, Category = UI)
+	UPROPERTY(EditAnywhere, Category = UI, meta = (AssetBundles = "Client"))
 	TSoftClassPtr<UCommonActivatableWidget> LayoutClass;
 
 	/** 앞서 보았던 PrimaryGameLayout의 LayerID를 의미 */
@@ -31,7 +31,7 @@ struct FTulHUDElementEntry
 {
 	GENERATED_BODY()
 	/** TulHUDLayout 위에 올릴 대상이 되는 Widget Class */
-	UPROPERTY(EditAnywhere, Category = UI)
+	UPROPERTY(EditAnywhere, Category = UI, meta = (AssetBundles = "Client"))
 	TSoftClassPtr<UUserWidget> WidgetClass;
 
 	/** SlotID는  TulHUDLayoutRequest에 올린 LayoutClass에 정의된 Slot(GameplayTag)를 의미*/
