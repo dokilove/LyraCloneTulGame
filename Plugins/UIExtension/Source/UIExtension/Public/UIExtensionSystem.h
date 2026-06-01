@@ -94,7 +94,7 @@ public:
 	int32 Priority = INDEX_NONE;
 };
 
-DECLARE_DELEGATE_TwoParams(FExtendExtensionPointDelegate, EUIExtensionAction Action, FUIExtensionRequest& Request);
+DECLARE_DELEGATE_TwoParams(FExtendExtensionPointDelegate, EUIExtensionAction Action, const FUIExtensionRequest& Request);
 
 struct FUIExtensionPoint : TSharedFromThis<FUIExtensionPoint>
 {
