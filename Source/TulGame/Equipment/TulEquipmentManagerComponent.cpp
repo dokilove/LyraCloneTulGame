@@ -110,6 +110,21 @@ void UTulEquipmentManagerComponent::UnequipItem(UTulEquipmentInstance* ItemInsta
     }
 }
 
+UTulEquipmentInstance* UTulEquipmentManagerComponent::GetFirstInstanceOfType(TSubclassOf<UTulEquipmentInstance> InstanceType)
+{
+    for (const FTulAppliedEquipmentEntry& Entry : EquipmentList.Entries)
+    {
+        if (UTulEquipmentInstance* Instance = Entry.Instance)
+        {
+            if (Instance->IsA(InstanceType))
+            {
+                return Instance;
+            }
+        }
+    }
+    return nullptr;
+}
+
 TArray<UTulEquipmentInstance*> UTulEquipmentManagerComponent::GetEquipmentInstancesOfType(TSubclassOf<UTulEquipmentInstance> InstanceType) const
 {
     TArray<UTulEquipmentInstance*> Results;

@@ -11,7 +11,7 @@ class UTulInventoryItemFragment;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class TULGAME_API UTulInventoryItemInstance : public UObject
 {
 	GENERATED_BODY()
@@ -19,6 +19,7 @@ class TULGAME_API UTulInventoryItemInstance : public UObject
 public:
 	UTulInventoryItemInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta = (DeterminesOutputType = FragmentClass))
 	const UTulInventoryItemFragment* FindFragmentByClass(TSubclassOf<UTulInventoryItemFragment> FragmentClass) const;
 
 	template <typename ResultClass>
