@@ -35,6 +35,9 @@ public class TulGame : ModuleRules
 			"UMG",
 			// UIExtension
 			"UIExtension",
+			// Slate
+			"Slate",
+			"SlateCore",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
