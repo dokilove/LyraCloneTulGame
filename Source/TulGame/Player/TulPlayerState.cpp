@@ -5,6 +5,8 @@
 #include "Abilities/GameplayAbilityTypes.h"
 #include "TulGame/AbilitySystem/TulAbilitySystemComponent.h"
 #include "TulGame/AbilitySystem/TulAbilitySet.h"
+#include "TulGame/AbilitySystem/Attributes/TulHealthSet.h"
+#include "TulGame/AbilitySystem/Attributes/TulCombatSet.h"
 #include "TulGame/GameModes/TulExperienceManagerComponent.h"
 #include "TulGame/GameModes/TulGameModeBase.h"
 #include "TulGame/Character/TulPawnData.h"
@@ -12,6 +14,9 @@
 ATulPlayerState::ATulPlayerState(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UTulAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
+
+	CreateDefaultSubobject<UTulHealthSet>(TEXT("HealthSet"));
+	CreateDefaultSubobject<UTulCombatSet>(TEXT("CombatSet"));
 }
 
 void ATulPlayerState::PostInitializeComponents()
