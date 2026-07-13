@@ -9,6 +9,7 @@
 
 class UTulPawnExtensionComponent;
 class UTulCameraComponent;
+class UTulHealthComponent;
 
 UCLASS()
 class TULGAME_API ATulCharacter : public AModularCharacter, public IAbilitySystemInterface
@@ -18,6 +19,9 @@ class TULGAME_API ATulCharacter : public AModularCharacter, public IAbilitySyste
 public:
 	// Sets default values for this character's properties
 	ATulCharacter();
+
+	void OnAbilitySystemInitialized();
+	void OnAbilitySystemUninitialized();
 
 	/**
 	* IAbilitySystemInterface
@@ -41,4 +45,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tul|Character")
 	TObjectPtr<UTulCameraComponent> CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tul|Character")
+	TObjectPtr<UTulHealthComponent> HealthComponent;
 };

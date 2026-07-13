@@ -36,6 +36,10 @@ public:
 	void InitializeAbilitySystem(UTulAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	void UninitializeAbilitySystem();
 
+	/** OnAbilitySystem[Initialized][Uninitialized] Delegate에 추가: */
+	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
+	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate);
+
 	/*
 	* UPawnComponent interfaces
 	**/
@@ -60,4 +64,8 @@ public:
 	/** AbilitySystemComponent 캐싱 */
 	UPROPERTY()
 	TObjectPtr<UTulAbilitySystemComponent> AbilitySystemComponent;
+
+	/** ASC Init과 Uninit의 Delegate 추가 */
+	FSimpleMulticastDelegate OnAbilitySystemInitialized;
+	FSimpleMulticastDelegate OnAbilitySystemUninitialized;
 };

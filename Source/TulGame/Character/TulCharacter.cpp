@@ -5,6 +5,7 @@
 #include "TulPawnExtensionComponent.h"
 #include "TulGame/AbilitySystem/TulAbilitySystemComponent.h"
 #include "TulGame/Camera/TulCameraComponent.h"
+#include "TulHealthComponent.h"
 
 // Sets default values
 ATulCharacter::ATulCharacter()
@@ -16,11 +17,20 @@ ATulCharacter::ATulCharacter()
 
 	// PawnExtComponent 생성
 	PawnExtComponent = CreateDefaultSubobject<UTulPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	{
+		PawnExtComponent->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
+		PawnExtComponent->OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemUninitialized));
+	}
 
 	// CameraComponent 생성
 	{
 		CameraComponent = CreateDefaultSubobject<UTulCameraComponent>(TEXT("CameraComponent"));
 		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
+	}
+
+	// HealthComponent 생성
+	{
+		HealthComponent = CreateDefaultSubobject<UTulHealthComponent>(TEXT("HealthComponent"));
 	}
 }
 
@@ -52,5 +62,19 @@ void ATulCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	// Pawn이 Possess로서, Controller와 PlayerState 정보 접근이 가능한 상태가 되었음:
 	// - SetupPlayerInputComponent 확인
 	PawnExtComponent->SetupPlayerInputComponent();
+}
+
+void ATulCharacter::OnAbilitySystemInitialized()
+{
+	UTulAbilitySystemComponent* TulASC = Cast<UTulAbilitySystemComponent>(GetAbilitySystemComponent());
+	check(TulASC);
+
+	// HealthComponent의 ASC를 통한 초기화
+	HealthComponent->InitializeWithAbilitySystem(TulASC);
+}
+
+void ATulCharacter::OnAbilitySystemUninitialized()
+{
+	HealthComponent->UninitializeWithAbilitySystem();
 }
 
