@@ -16,4 +16,6 @@ void UTulReticleWidgetBase::InitializeFromWeapon(UTulWeaponInstance* InWeapon)
 	{
 		InventoryInstance = Cast<UTulInventoryItemInstance>(WeaponInstance->GetInstigator());
 	}
+
+	OnWeaponInitialized();
 }

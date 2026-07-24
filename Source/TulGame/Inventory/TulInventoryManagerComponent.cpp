@@ -19,6 +19,15 @@ UTulInventoryItemInstance* FTulInventoryList::AddEntry(TSubclassOf<UTulInventory
 	NewEntry.Instance = NewObject<UTulInventoryItemInstance>(OwningActor);
 	NewEntry.Instance->ItemDef = ItemDef;
 
+	//  iterating fragments and call callback to InInstanceCreated()
+	for (const UTulInventoryItemFragment* Fragment : GetDefault<UTulInventoryItemDefinition>(ItemDef)->Fragments)
+	{
+		if (Fragment)
+		{
+			Fragment->OnInstanceCreated(NewEntry.Instance);
+		}
+	}
+
 	Result = NewEntry.Instance;
 	return Result;
 }
