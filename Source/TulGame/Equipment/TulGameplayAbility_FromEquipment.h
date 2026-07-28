@@ -7,6 +7,7 @@
 #include "TulGameplayAbility_FromEquipment.generated.h"
 
 class UTulEquipmentInstance;
+class UTulInventoryItemInstance;
 
 /**
  * 
@@ -17,5 +18,6 @@ class TULGAME_API UTulGameplayAbility_FromEquipment : public UTulGameplayAbility
 	GENERATED_BODY()
 public:
 	UTulEquipmentInstance* GetAssociatedEquipment() const;
+	UTulInventoryItemInstance* GetAssociatedItem() const;
 	
 };

@@ -3,6 +3,7 @@
 
 #include "TulGameplayAbility_FromEquipment.h"
 #include "TulEquipmentInstance.h"
+#include "TulGame/Inventory/TulInventoryItemInstance.h"
 
 UTulEquipmentInstance* UTulGameplayAbility_FromEquipment::GetAssociatedEquipment() const
 {
@@ -16,5 +17,17 @@ UTulEquipmentInstance* UTulGameplayAbility_FromEquipment::GetAssociatedEquipment
 		return Cast<UTulEquipmentInstance>(Spec->SourceObject.Get());
 	}
 
+	return nullptr;
+}
+
+UTulInventoryItemInstance* UTulGameplayAbility_FromEquipment::GetAssociatedItem() const
+{
+	if (UTulEquipmentInstance* Equipment = GetAssociatedEquipment())
+	{
+		// In Lyra, equipment is equipped by inventory item instance:
+		// - so, equipment's instigator should be inventory item instance
+		// - otherwise, it will return nullptr by failing casting to TulInventoryItemInstance
+		return Cast<UTulInventoryItemInstance>(Equipment->GetInstigator());
+	}
 	return nullptr;
 }
